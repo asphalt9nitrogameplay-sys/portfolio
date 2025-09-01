@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shaurya Thakur — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --text:#e9eef2; --muted:#b7c0c7;
+    --hot:#ff2b6a; --cold:#00e5ff;
+    --card:#0f1117cc; --ring: conic-gradient(from 180deg at 50% 50%, var(--hot), var(--cold), var(--hot));
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0; font-family:Poppins,system-ui,Segoe UI,Roboto,Arial,Helvetica,sans-serif; color:var(--text); background:var(--bg); overflow-x:hidden; scroll-behavior:smooth}
+
+  .glow{filter:drop-shadow(0 0 18px rgba(255,43,106,.45)) drop-shadow(0 0 28px rgba(0,229,255,.25))}
+  .accent{background:linear-gradient(90deg,var(--hot),var(--cold)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .pills{display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+  .pill{padding:6px 10px; font-size:12px; border-radius:999px; border:1px solid #ffffff2a; background:#0c0f15aa}
+
+  /* sticky nav */
+  .nav{position:fixed; inset:16px 16px auto 16px; height:56px; display:flex; align-items:center; gap:14px;
+       backdrop-filter:blur(10px); background:#0b0b0f80; border-radius:16px; padding:0 14px; z-index:20;
+       border:1px solid #ffffff22}
+  .nav a{color:var(--text); text-decoration:none; font-weight:600; padding:10px 14px; border-radius:12px}
+  .nav a:hover{background:#ffffff10}
+
+  /* Section background helpers */
+  .section-bg{
+    position:relative; isolation:isolate;
+    background-attachment: fixed;
+    background-size: cover; background-position: center;
+  }
+  .section-bg::before{
+    content:""; position:absolute; inset:0; z-index:-1;
+    background:linear-gradient(#0000009a,#000000b0);
+  }
+
+  /* HERO with local + fallback image */
+  .hero.section-bg{
+    min-height:100vh; display:grid; place-items:center; text-align:center; overflow:hidden;
+    background-image:
+      url('https://i.postimg.cc/pXkt2V9X/editing-1141505-960-720.webp'),
+      url('https://images.unsplash.com/photo-1580894743146-16b6a3878d23?q=80&w=1600&auto=format&fit=crop');
+  }
+  .brand{z-index:1; padding:18px; max-width:1100px; display:flex; flex-direction:column; align-items:center; gap:18px}
+  .brand h1{font-size:clamp(32px,6vw,64px); margin:0}
+  .brand p{margin:0; color:var(--muted); font-size:clamp(14px,2.6vw,18px)}
+
+  /* HOME tiles (4) */
+  .home-sections{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:20px; width:100%}
+  .portal{
+    position:relative; aspect-ratio:4/3; display:grid; place-items:center; cursor:pointer; border-radius:22px;
+    color:var(--text); text-decoration:none; background:linear-gradient(180deg,#141824, #0c0f15); overflow:hidden;
+    transform-style:preserve-3d; transition:transform .25s, box-shadow .25s; border:1px solid #ffffff1a
+  }
+  .portal::before{content:""; position:absolute; inset:-2px; border-radius:24px; background:var(--ring); filter:blur(18px); opacity:.5; transition:.25s}
+  .portal .content{position:relative; z-index:1; text-align:center; padding:14px}
+  .portal h3{margin:0; font-size:clamp(16px,2.2vw,22px)} .portal p{margin:6px 0 0; font-size:12px; color:#cfd6dc}
+  .portal svg{width:46px; height:46px; margin-bottom:8px}
+  .portal:hover{transform:translateY(-6px) rotateX(6deg); box-shadow:0 20px 60px #00000080} .portal:hover::before{opacity:.9}
+
+  section{padding:96px 18px 84px}
+  .section-inner{max-width:1200px; margin-inline:auto}
+
+  /* BACKGROUNDS for each section */
+  #work.section-bg{
+    background-image:url('https://images.unsplash.com/photo-1515705576963-95cad62945b6?q=80&w=1600&auto=format&fit=crop');
+  }
+  #exp.section-bg{
+    background-image:url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1600&auto=format&fit=crop');
+  }
+  #ai.section-bg{
+    background-image:url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1600&auto=format&fit=crop');
+  }
+  #contact.section-bg{
+    background-image:url('https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?q=80&w=1600&auto=format&fit=crop');
+  }
+  #about.section-bg{
+    background-image:url('https://images.unsplash.com/photo-1519183071298-a2962be96f83?q=80&w=1600&auto=format&fit=crop');
+  }
+
+  /* MOST LIKED (3) */
+  .spotlights{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); margin-bottom:26px}
+  .spot{position:relative; background:var(--card); border:1px solid #ffffff1f; border-radius:20px; overflow:hidden}
+  .spot .flag{position:absolute; top:12px; left:12px; padding:6px 10px; font-size:12px; border-radius:999px;
+              background:linear-gradient(90deg,var(--hot),var(--cold)); color:#000; font-weight:800}
+  .spot .player{width:100%; aspect-ratio:21/9; background:#06080d}
+  .spot .meta{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-top:1px solid #ffffff14}
+  .spot .meta h3{margin:0} .spot .meta small{color:var(--muted)}
+
+  /* GRID (7) */
+  .grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .card{position:relative; background:var(--card); border:1px solid #ffffff1f; border-radius:18px; overflow:hidden; transition:transform .25s, box-shadow .25s, border-color .25s}
+  .card:hover{transform:translateY(-6px); border-color:#ffffff33; box-shadow:0 18px 50px #00000075}
+  .badge{position:absolute; top:10px; left:10px; padding:6px 10px; font-size:11px; border-radius:999px; background:linear-gradient(90deg,var(--hot),var(--cold)); color:#000; font-weight:700}
+  .player{width:100%; aspect-ratio:16/9; background:#06080d}
+  .player iframe, .player video{width:100%; height:100%; display:block; border:0}
+
+  /* EXPERIENCE timeline */
+  .timeline{position:relative; margin:12px auto; max-width:900px}
+  .timeline::before{content:""; position:absolute; left:calc(50% - 1px); top:0; bottom:0; width:2px; background:linear-gradient(var(--hot),var(--cold)); border-radius:2px; opacity:.7}
+  .t-item{position:relative; width:50%; padding:18px 22px}
+  .t-item:nth-child(odd){left:0; text-align:right} .t-item:nth-child(even){left:50%}
+  .t-card{display:inline-block; background:var(--card); border:1px solid #ffffff1a; border-radius:16px; padding:14px 16px; max-width:380px}
+  .t-dot{position:absolute; top:22px; width:14px; height:14px; border-radius:50%; background:var(--hot); border:2px solid #111; box-shadow:0 0 18px var(--hot)}
+  .t-item:nth-child(odd) .t-dot{right:-7px} .t-item:nth-child(even) .t-dot{left:-7px}
+
+  /* AI EXPERIENCE */
+  .ai-grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .ai-card{background:var(--card); border:1px solid #ffffff1a; border-radius:16px; padding:16px}
+  .ai-card h4{margin:0 0 6px}
+  .list{margin:8px 0 0; padding-left:16px; color:#cfd6dc}
+  .list li{margin:6px 0}
+
+  /* ABOUT — new details layout */
+  .about-grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .about-card{background:var(--card); border:1px solid #ffffff1a; border-radius:16px; padding:18px}
+  .info-grid{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); margin-top:10px}
+  .info{background:#0c0f15; border:1px solid #ffffff1a; border-radius:12px; padding:10px 12px}
+  .info strong{display:block; font-size:13px}
+  .info small{color:#bfc8cf}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+  .tag{background:#0c0f15; border:1px solid #ffffff22; padding:6px 10px; border-radius:999px; font-size:12px; color:#dbe3ea}
+
+  /* CONTACT */
+  .contact-card{max-width:820px; margin:18px auto; background:var(--card); border:1px solid #ffffff1a; border-radius:18px; padding:22px}
+  .contact-grid{display:grid; gap:16px; grid-template-columns:1fr 1fr}
+  .contact-card input,.contact-card textarea{width:100%; background:#0c0f15; border:1px solid #ffffff1a; color:#e9eef2; border-radius:12px; padding:12px 14px; font:inherit; outline:none}
+  .contact-card textarea{min-height:120px; resize:vertical}
+  .btn{display:inline-block; background:linear-gradient(90deg,var(--hot),var(--cold)); color:#051018; border:0; padding:12px 16px; border-radius:14px; font-weight:800; cursor:pointer}
+  footer{color:#9aa6af; text-align:center; padding:56px 12px}
+
+  @media (max-width:860px){
+    .home-sections{grid-template-columns:1fr}
+    .timeline::before{left:6px}
+    .t-item,.t-item:nth-child(even){width:100%; left:0; text-align:left}
+    .t-dot{left:-1px}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#work">My Work</a>
+  <a href="#exp">My Experience</a>
+  <a href="#ai">AI</a>
+  <a href="#about">About Me</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<!-- HOMEPAGE with 4 tiles -->
+<header class="hero section-bg" id="home">
+  <div class="brand">
+    <h1 class="glow">Shaurya <span class="accent">Thakur</span></h1>
+    <p>Professional Video Editor • 3D Camera & Motion • After Effects • Blender</p>
+    <div class="pills">
+      <span class="pill">Royal Enfield Chandigarh</span>
+      <span class="pill">Elevenstoic (1M+)</span>
+      <span class="pill">Youngster of CHD (150k+)</span>
+      <span class="pill">Desi Melodies</span>
+      <span class="pill">Red Chillies (Music)</span>
+    </div>
+
+    <div class="home-sections" style="margin-top:18px">
+      <a class="portal glow" href="#work"><div class="content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18M5 7l1 12h12l1-12M9 7V5h6v2"/></svg>
+        <h3>My Work</h3><p>Most liked + more</p></div></a>
+
+      <a class="portal glow" href="#exp"><div class="content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16v6H4zM4 14h16v6H4zM9 4v16"/></svg>
+        <h3>My Experience</h3><p>Brands & pages</p></div></a>
+
+      <a class="portal glow" href="#ai"><div class="content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l4 4-4 4-4-4 4-4zm0 12l4 4-4 4-4-4 4-4z"/></svg>
+        <h3>AI</h3><p>Kling • Veo 3 • Gemini • ChatGPT</p></div></a>
+
+      <a class="portal glow" href="#contact"><div class="content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16v16H4z"/><path d="M22 6l-9.5 7L3 6"/></svg>
+        <h3>Contact Me</h3><p>Let’s build something cinematic</p></div></a>
+    </div>
+  </div>
+</header>
+
+<!-- WORK (3 most liked + 7 others = 10 total) -->
+<section id="work" class="section-bg">
+  <div class="section-inner">
+    <h2 class="accent glow" style="text-align:center; margin-bottom:14px;">My Work</h2>
+    <p style="text-align:center; color:var(--muted); margin-bottom:20px">Three fan-favourites on top, then seven more projects. Total on page: <b>10</b>.</p>
+
+    <!-- MOST LIKED (3) -->
+    <div class="spotlights">
+      <article class="spot" data-link="https://drive.google.com/file/d/1UZxAFQuu2fiwTB-uRDTOIKv64tMH1pw4/view">
+        <span class="flag">★ Fan Favorite #1</span>
+        <div class="player"></div>
+        <div class="meta"><h3>Signature Momentum Cut</h3><small>Praised for 3D camera energy</small></div>
+      </article>
+
+      <article class="spot" data-link="https://drive.google.com/file/d/1X-3CwwsQfbvvE199QtuEZSFmkmq864E0/view">
+        <span class="flag">★ Fan Favorite #2</span>
+        <div class="player"></div>
+        <div class="meta"><h3>Rhythm-Perfect Reel</h3><small>Beat-synced, high retention</small></div>
+      </article>
+
+      <article class="spot" data-link="https://drive.google.com/file/d/1BO78hHgSt-Fya8kN8CXZOf1fIf5w6C4r/view?usp=sharing">
+        <span class="flag">★ Fan Favorite #3</span>
+        <div class="player"></div>
+        <div class="meta"><h3>Cinematic Depth Pass</h3><small>AE depth + parallax finesse</small></div>
+      </article>
+    </div>
+
+    <!-- 7 others -->
+    <div class="grid">
+      <div class="card" data-link="https://drive.google.com/file/d/1EIh6sxnhpK6L3AyVWHdVCnn6bASVK4aR/view"><span class="badge">01</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/1KNRftcRBbk78o_Phq4b9t5Jv8VvdFbFD/view"><span class="badge">02</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/1HcAtJp0BUCQF4nF7hFLQ5xYZlSu9QDed/view"><span class="badge">03</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/10hyMi5ac9nuovmDl1gO89w65dYwTZIGI/view"><span class="badge">04</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/1XGDeYNdK-979AaBky2lOnEYox7uDGk90/view"><span class="badge">05</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/1d9euCmdOzxngUtWu7i2RSeDB5hgF9599/view"><span class="badge">06</span><div class="player"></div></div>
+      <div class="card" data-link="https://drive.google.com/file/d/1Lr0PBWUo7FaBk2F7ZEobI_Yf8Cn0hkTO/view"><span class="badge">07</span><div class="player"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MY EXPERIENCE -->
+<section id="exp" class="section-bg">
+  <div class="section-inner">
+    <h2 class="accent glow" style="text-align:center; margin-bottom:10px;">My Experience</h2>
+    <p style="text-align:center; color:var(--muted); margin-bottom:12px">Brands & pages I’ve edited for.</p>
+
+    <div class="timeline">
+      <div class="t-item"><span class="t-dot"></span><div class="t-card"><strong>Royal Enfield – Chandigarh</strong><br/><small>Branded edits & reels</small></div></div>
+      <div class="t-item"><span class="t-dot"></span><div class="t-card"><strong>Elevenstoic (1M+)</strong> & <strong>Eight.stoic</strong><br/><small>Instagram content, high-retention cuts</small></div></div>
+      <div class="t-item"><span class="t-dot"></span><div class="t-card"><strong>Youngster of CHD (150k+)</strong><br/><small>Social edits, motion graphics</small></div></div>
+      <div class="t-item"><span class="t-dot"></span><div class="t-card"><strong>Desi Melodies</strong> & <strong>Red Chillies (Music)</strong><br/><small>Label visuals, AE 3D camera work</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai" class="section-bg">
+  <div class="section-inner">
+    <h2 class="accent glow" style="text-align:center; margin-bottom:10px;">AI Experience</h2>
+    <p style="text-align:center; color:var(--muted); margin-bottom:20px">
+      Blending AI ideation with cinematic craft to move faster without losing style.
+    </p>
+
+    <div class="ai-grid">
+      <div class="ai-card">
+        <h4>Generative & Assistive</h4>
+        <ul class="list">
+          <li><strong>Kling</strong> — quick concept reels & stylized motion</li>
+          <li><strong>Veo 3</strong> — text-to-video mood passes & exploration</li>
+          <li><strong>Gemini</strong> & <strong>ChatGPT</strong> — script beats, cut lists, captions</li>
+        </ul>
+      </div>
+      <div class="ai-card">
+        <h4>Creative Frameworks</h4>
+        <ul class="list">
+          <li><strong>NanoBanana</strong> — experimental AI composition helpers</li>
+          <li><strong>Hail UI</strong> — interface ideas for creative tooling</li>
+        </ul>
+      </div>
+      <div class="ai-card">
+        <h4>Workflow Blend</h4>
+        <ul class="list">
+          <li>AI pre-viz → rhythm lock → <strong>After Effects 3D camera</strong> & <strong>Blender</strong></li>
+          <li>Adaptive color looks + motion graphics passes</li>
+          <li>Delivery-optimized exports for IG/YouTube/labels</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT ME — UPDATED WITH AGE + FULL SOFTWARE LIST -->
+<section id="about" class="section-bg">
+  <div class="section-inner">
+    <h2 class="accent glow" style="text-align:center; margin-bottom:10px;">About Me</h2>
+
+    <div class="about-grid">
+      <!-- Bio + summary -->
+      <div class="about-card">
+        <p style="margin:0 0 8px;color:#d9e2e8;">
+          I’m <strong>Shaurya Thakur</strong>, a <strong>17-year-old professional video editor</strong> with 
+          <strong>1+ year</strong> of hands-on work. My speciality is <strong>3D animation</strong> and 
+          <strong>3D camera moves</strong> in After Effects, with Blender for custom shots and CG elements.
+        </p>
+        <p style="margin:0;color:#c7d0d6;">
+          I deliver high-retention cuts, beat-perfect rhythm edits, and clean color/VFX polish for brands and music labels.
+        </p>
+
+        <div class="info-grid">
+          <div class="info"><strong>Age</strong><small>17</small></div>
+          <div class="info"><strong>Experience</strong><small>1+ year</small></div>
+          <div class="info"><strong>Role</strong><small>Professional Video Editor</small></div>
+          <div class="info"><strong>Specialty</strong><small>3D camera & motion</small></div>
+          <div class="info"><strong>Main Software</strong><small>After Effects, Blender</small></div>
+          <div class="info"><strong>Also Use</strong><small>Photoshop, Premiere Pro, DaVinci Resolve, CapCut</small></div>
+        </div>
+      </div>
+
+      <!-- Software / skills chips -->
+      <div class="about-card">
+        <h4 style="margin:0 0 6px">Software I Know</h4>
+        <div class="tag-row">
+          <span class="tag">After Effects</span>
+          <span class="tag">Blender</span>
+          <span class="tag">Premiere Pro</span>
+          <span class="tag">Photoshop</span>
+          <span class="tag">DaVinci Resolve</span>
+          <span class="tag">CapCut</span>
+        </div>
+
+        <h4 style="margin:16px 0 6px">Core Skills</h4>
+        <div class="tag-row">
+          <span class="tag">3D Camera Moves (AE)</span>
+          <span class="tag">3D Animation</span>
+          <span class="tag">Beat-sync Editing</span>
+          <span class="tag">Motion Graphics</span>
+          <span class="tag">Color Looks & VFX</span>
+        </div>
+
+        <h4 style="margin:16px 0 6px">AI I work with</h4>
+        <div class="tag-row">
+          <span class="tag">Kling</span>
+          <span class="tag">Veo 3</span>
+          <span class="tag">Gemini</span>
+          <span class="tag">ChatGPT</span>
+          <span class="tag">NanoBanana</span>
+          <span class="tag">Hail UI</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="section-bg">
+  <div class="section-inner">
+    <h2 class="accent glow" style="text-align:center; margin-bottom:16px;">Contact Me</h2>
+    <p style="text-align:center; color:#d7e1e7; margin-bottom:8px">
+      Email: <a class="accent" href="mailto:shauryat408@gmail.com">shauryat408@gmail.com</a> &nbsp;•&nbsp;
+      Phone: <a class="accent" href="tel:+917087896330">+91 7087896330</a> &nbsp;•&nbsp;
+      Instagram: <a class="accent" href="https://instagram.com/shaurya.thakur04" target="_blank">@shaurya.thakur04</a>
+    </p>
+    <form class="contact-card" action="mailto:shauryat408@gmail.com" method="post" enctype="text/plain">
+      <div class="contact-grid">
+        <input name="name" placeholder="Your name" required />
+        <input name="email" type="email" placeholder="Your email" required />
+        <textarea name="message" placeholder="Tell me about your project…" class="full" style="grid-column:1/-1"></textarea>
+      </div>
+      <div style="margin-top:14px; display:flex; gap:12px; justify-content:flex-end">
+        <button class="btn" type="submit">Send Message</button>
+        <a class="btn" href="mailto:shauryat408@gmail.com" style="text-decoration:none; display:inline-block;">Email Directly</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>© 2025 Shaurya Thakur — All Rights Reserved</footer>
+
+<script>
+  // Subtle 3D tilt for homepage tiles
+  document.querySelectorAll('.portal').forEach(card=>{
+    card.addEventListener('mousemove', (e)=>{
+      const r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+      const rx=(y-.5)*-10, ry=(x-.5)*10; card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', ()=> card.style.transform='');
+  });
+
+  // Google Drive auto-embed: works with /file/d/ID/view or ?id=ID; MP4 direct also fine
+  function toEmbed(url){
+    try{
+      if (/drive\.google\.com/i.test(url)){
+        const idMatch = url.match(/\/d\/([^\/\?]+)/) || url.match(/[?&]id=([^&]+)/);
+        if (idMatch) return {type:'iframe', src:`https://drive.google.com/file/d/${idMatch[1]}/preview`};
+      }
+      if (/\.(mp4|webm|ogg)(\?|#|$)/i.test(url)) return {type:'video', src:url};
+      return {type:'link', href:url};
+    }catch{ return {type:'link', href:url}; }
+  }
+  document.querySelectorAll('[data-link]').forEach(card=>{
+    const url=card.getAttribute('data-link'), target=card.querySelector('.player'), emb=toEmbed(url);
+    if(emb.type==='iframe') target.innerHTML=`<iframe allow="autoplay" allowfullscreen src="${emb.src}"></iframe>`;
+    else if(emb.type==='video') target.innerHTML=`<video controls src="${emb.src}"></video>`;
+    else target.innerHTML=`<a class="btn" href="${emb.href}" target="_blank" rel="noopener">Open Video</a>`;
+  });
+</script>
+</body>
+</html>
